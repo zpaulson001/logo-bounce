@@ -30,13 +30,6 @@ struct BouncingLogo: View {
                 ZStack(alignment: .topLeading) {
                     Color.black // Background
                     
-                    // The "DVD" Logo
-//                    RoundedRectangle(cornerRadius: 10)
-//                        .fill(logoColor)
-//                        .frame(width: logoWidth, height: logoHeight)
-//                        .overlay(Text("DVD").foregroundColor(.black).bold())
-//                        .offset(x: pos.x, y: pos.y)
-                    
                     Image("jedediah_logo")
                         .renderingMode(.template)
                         .resizable()
