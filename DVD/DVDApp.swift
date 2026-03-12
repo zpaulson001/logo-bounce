@@ -28,7 +28,6 @@ struct DVDApp: App {
         WindowGroup {
             ContentView()
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-//                .mainToolbar()
                 .navigationTitle("")
                 .environment(mainToolbarSettings)
                 .environment(mouseLocation)
