@@ -6,29 +6,41 @@
 //
 
 import SwiftUI
+import Observation
 
-@main
-struct DVDApp: App {
-    var body: some Scene {
-        @State var isShowingPopover = false
-        WindowGroup {
-            ContentView()
-                .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button (action: {
-                            isShowingPopover = true
-                        }) {
-                            Label("Settings", systemImage: "gearshape")
-                        }
-                        .popover(isPresented: $isShowingPopover) {
-                            Text("yo")
+
+struct MainToolbar: ViewModifier {
+    @State private var isShowingPopover = false
+    @Environment(MainToolbarSettings.self) private var mainToolbarSettings
+
+    func body(content: Content) -> some View {
+        @Bindable var bindableSettings = mainToolbarSettings
+        content
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button (action: {
+                        isShowingPopover = true
+                    }) {
+                        Label("Settings", systemImage: "gearshape")
+                    }
+                    .popover(isPresented: $isShowingPopover, arrowEdge: .bottom) {
+                        VStack {
+                            Slider(
+                                value: $bindableSettings.animationSpeed,
+                                in: 1...10,
+                                step: 2
+                            )
                         }
                     }
                 }
-                .navigationTitle("")
+            }
             
         }
-    }
+    
 }
 
+extension View {
+    func mainToolbar() -> some View {
+        modifier(MainToolbar())
+    }
+}
