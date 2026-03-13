@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
-    
+
     var body: some View {
         @Bindable var bindableSettings = mainToolbarSettings
 
@@ -17,7 +17,7 @@ struct BottomBar: View {
             Color.clear
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             HStack {
-                
+
                 ZStack {
                     Slider(
                         value: $bindableSettings.animationSpeed,
@@ -32,7 +32,7 @@ struct BottomBar: View {
                         maximumValueLabel: {
                             Image(systemName: "hare")
                         }
-                        
+
                     )
                     .labelsHidden()
                     .frame(maxWidth: 200)
@@ -40,12 +40,11 @@ struct BottomBar: View {
                 }
                 .background(.ultraThinMaterial)
                 .clipShape(Capsule())
- 
-                
+
             }
-        
+
         }
-        
+
     }
 }
 

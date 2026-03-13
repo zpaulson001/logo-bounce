@@ -5,8 +5,8 @@
 //  Created by Zac Paulson on 3/5/26.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 @Observable
 class MainToolbarSettings {
@@ -18,8 +18,7 @@ class MainToolbarSettings {
 struct DVDApp: App {
     @State private var mainToolbarSettings = MainToolbarSettings()
     @State private var hideWorkItem: DispatchWorkItem?
-    
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -35,12 +34,15 @@ struct DVDApp: App {
                         NSCursor.hide()
                     }
                     hideWorkItem = workItem
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: workItem)
+                    DispatchQueue.main.asyncAfter(
+                        deadline: .now() + 2.5,
+                        execute: workItem
+                    )
                 }
                 .onContinuousHover { phase in
                     switch phase {
                     case .active:
-                        
+
                         if !mainToolbarSettings.isVisible {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 mainToolbarSettings.isVisible = true
@@ -48,10 +50,10 @@ struct DVDApp: App {
                             updateWindowAppearance(visible: true)
                             NSCursor.unhide()
                         }
-                        
+
                         // 2. Cancel the previous "hide" timer
                         hideWorkItem?.cancel()
-                        
+
                         // 3. Start a new 2-second timer
                         let workItem = DispatchWorkItem {
                             withAnimation(.easeInOut(duration: 0.2)) {
@@ -61,21 +63,28 @@ struct DVDApp: App {
                             NSCursor.hide()
                         }
                         hideWorkItem = workItem
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: workItem)
+                        DispatchQueue.main.asyncAfter(
+                            deadline: .now() + 2.5,
+                            execute: workItem
+                        )
                     case .ended:
                         break
                     }
                 }
-            
+
         }
     }
-    
+
     private func updateWindowAppearance(visible: Bool) {
         // Find the underlying NSWindow
-        guard let window = NSApp.keyWindow ?? NSApp.windows.first else { return }
-        
+        guard let window = NSApp.keyWindow ?? NSApp.windows.first else {
+            return
+        }
+
         // 2. Handle the "Traffic Lights" (Close, Minimize, Zoom)
-        let buttons: [NSWindow.ButtonType] = [.closeButton, .miniaturizeButton, .zoomButton]
+        let buttons: [NSWindow.ButtonType] = [
+            .closeButton, .miniaturizeButton, .zoomButton,
+        ]
         for buttonType in buttons {
             if let button = window.standardWindowButton(buttonType) {
                 // Using animator() gives it that smooth QuickTime fade
@@ -84,4 +93,3 @@ struct DVDApp: App {
         }
     }
 }
-
