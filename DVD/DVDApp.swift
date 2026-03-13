@@ -11,18 +11,14 @@ import Observation
 @Observable
 class MainToolbarSettings {
     var animationSpeed: Double = 1
-}
-
-@Observable
-class MouseLocation {
-    var x: CGFloat = 0
-    var y: CGFloat = 0
+    var isVisible: Bool = true
 }
 
 @main
 struct DVDApp: App {
     @State private var mainToolbarSettings = MainToolbarSettings()
-    @State private var mouseLocation = MouseLocation()
+    @State private var hideWorkItem: DispatchWorkItem?
+    
     
     var body: some Scene {
         WindowGroup {
@@ -30,17 +26,61 @@ struct DVDApp: App {
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
                 .navigationTitle("")
                 .environment(mainToolbarSettings)
-                .environment(mouseLocation)
+                .onAppear {
+                    let workItem = DispatchWorkItem {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            mainToolbarSettings.isVisible = false
+                        }
+                        updateWindowAppearance(visible: false)
+                        NSCursor.hide()
+                    }
+                    hideWorkItem = workItem
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: workItem)
+                }
                 .onContinuousHover { phase in
                     switch phase {
-                    case .active(let location):
-                        mouseLocation.x = location.x
-                        mouseLocation.y = location.y
+                    case .active:
+                        
+                        if !mainToolbarSettings.isVisible {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                mainToolbarSettings.isVisible = true
+                            }
+                            updateWindowAppearance(visible: true)
+                            NSCursor.unhide()
+                        }
+                        
+                        // 2. Cancel the previous "hide" timer
+                        hideWorkItem?.cancel()
+                        
+                        // 3. Start a new 2-second timer
+                        let workItem = DispatchWorkItem {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                mainToolbarSettings.isVisible = false
+                            }
+                            updateWindowAppearance(visible: false)
+                            NSCursor.hide()
+                        }
+                        hideWorkItem = workItem
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: workItem)
                     case .ended:
                         break
                     }
                 }
             
+        }
+    }
+    
+    private func updateWindowAppearance(visible: Bool) {
+        // Find the underlying NSWindow
+        guard let window = NSApp.keyWindow ?? NSApp.windows.first else { return }
+        
+        // 2. Handle the "Traffic Lights" (Close, Minimize, Zoom)
+        let buttons: [NSWindow.ButtonType] = [.closeButton, .miniaturizeButton, .zoomButton]
+        for buttonType in buttons {
+            if let button = window.standardWindowButton(buttonType) {
+                // Using animator() gives it that smooth QuickTime fade
+                button.animator().alphaValue = visible ? 1.0 : 0.0
+            }
         }
     }
 }

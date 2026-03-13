@@ -46,9 +46,14 @@ struct BouncingLogo: View {
                                     }
                                 }
                         )
-                    
-                    BottomBar()
-                        .padding()
+                    if toolbarSettings.isVisible {
+                        BottomBar()
+                            .padding()
+                            .transition(.opacity)
+                            .zIndex(1)
+                    }
+               
+                        
                 }
                 .onAppear {
                     // Center it initially

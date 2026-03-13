@@ -9,8 +9,6 @@ import SwiftUI
 
 struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
-    @Environment(MouseLocation.self) private var mouseLocation
-
     
     var body: some View {
         @Bindable var bindableSettings = mainToolbarSettings
@@ -20,16 +18,11 @@ struct BottomBar: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             HStack {
                 
-                Text("\(mouseLocation.x), \(mouseLocation.y)")
-                    .padding()
-                    .background(.ultraThinMaterial)
-                    .clipShape(Capsule())
-                
                 ZStack {
                     Slider(
                         value: $bindableSettings.animationSpeed,
                         in: 1...10,
-                        step: 2,
+                        step: 1,
                         label: {
                             Text("Speed")
                         },
