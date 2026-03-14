@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		43669EDC2F59FBF9006ED12C /* DVD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DVD.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		43669EDC2F59FBF9006ED12C /* Logo Bounce.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Logo Bounce.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		43669EDE2F59FBF9006ED12C /* DVD */ = {
+		43669EDE2F59FBF9006ED12C /* LogoBounce */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DVD;
+			path = LogoBounce;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		43669ED32F59FBF9006ED12C = {
 			isa = PBXGroup;
 			children = (
-				43669EDE2F59FBF9006ED12C /* DVD */,
+				43669EDE2F59FBF9006ED12C /* LogoBounce */,
 				43669EDD2F59FBF9006ED12C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		43669EDD2F59FBF9006ED12C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				43669EDC2F59FBF9006ED12C /* DVD.app */,
+				43669EDC2F59FBF9006ED12C /* Logo Bounce.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		43669EDB2F59FBF9006ED12C /* DVD */ = {
+		43669EDB2F59FBF9006ED12C /* Logo Bounce */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 43669EE72F59FBFB006ED12C /* Build configuration list for PBXNativeTarget "DVD" */;
+			buildConfigurationList = 43669EE72F59FBFB006ED12C /* Build configuration list for PBXNativeTarget "Logo Bounce" */;
 			buildPhases = (
 				43669ED82F59FBF9006ED12C /* Sources */,
 				43669ED92F59FBF9006ED12C /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				43669EDE2F59FBF9006ED12C /* DVD */,
+				43669EDE2F59FBF9006ED12C /* LogoBounce */,
 			);
-			name = DVD;
+			name = "Logo Bounce";
 			packageProductDependencies = (
 			);
 			productName = DVD;
-			productReference = 43669EDC2F59FBF9006ED12C /* DVD.app */;
+			productReference = 43669EDC2F59FBF9006ED12C /* Logo Bounce.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 43669ED72F59FBF9006ED12C /* Build configuration list for PBXProject "DVD" */;
+			buildConfigurationList = 43669ED72F59FBF9006ED12C /* Build configuration list for PBXProject "Logo Bounce" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				43669EDB2F59FBF9006ED12C /* DVD */,
+				43669EDB2F59FBF9006ED12C /* Logo Bounce */,
 			);
 		};
 /* End PBXProject section */
@@ -306,7 +306,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		43669ED72F59FBF9006ED12C /* Build configuration list for PBXProject "DVD" */ = {
+		43669ED72F59FBF9006ED12C /* Build configuration list for PBXProject "Logo Bounce" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				43669EE52F59FBFB006ED12C /* Debug */,
@@ -315,7 +315,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		43669EE72F59FBFB006ED12C /* Build configuration list for PBXNativeTarget "DVD" */ = {
+		43669EE72F59FBFB006ED12C /* Build configuration list for PBXNativeTarget "Logo Bounce" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				43669EE82F59FBFB006ED12C /* Debug */,

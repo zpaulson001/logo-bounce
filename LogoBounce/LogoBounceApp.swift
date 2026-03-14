@@ -1,6 +1,6 @@
 //
 //  DVDApp.swift
-//  DVD
+//  LogoBounce
 //
 //  Created by Zac Paulson on 3/5/26.
 //
@@ -15,7 +15,7 @@ class MainToolbarSettings {
 }
 
 @main
-struct DVDApp: App {
+struct LogoBounceApp: App {
     @State private var mainToolbarSettings = MainToolbarSettings()
     @State private var hideWorkItem: DispatchWorkItem?
 

@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  DVD
+//  LogoBounce
 //
 //  Created by Zac Paulson on 3/5/26.
 //
