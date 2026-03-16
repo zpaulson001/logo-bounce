@@ -10,17 +10,18 @@ import SwiftUI
 
 @Observable
 class MainToolbarSettings {
-    var animationSpeed: Double = 1
+    var animationSpeed: Double = 2
     var desiredLogoHeight: Double = 200
     var isVisible: Bool = true
     var logoName = "pbc_logo"
+    var mouseInWindow: Bool = false
 }
 
 @main
 struct LogoBounceApp: App {
     @State private var mainToolbarSettings = MainToolbarSettings()
     @State private var hideWorkItem: DispatchWorkItem?
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -44,6 +45,8 @@ struct LogoBounceApp: App {
                 .onContinuousHover { phase in
                     switch phase {
                     case .active:
+                        
+                        mainToolbarSettings.mouseInWindow = true
 
                         if !mainToolbarSettings.isVisible {
                             withAnimation(.easeInOut(duration: 0.2)) {
@@ -62,7 +65,9 @@ struct LogoBounceApp: App {
                                 mainToolbarSettings.isVisible = false
                             }
                             updateWindowAppearance(visible: false)
-                            NSCursor.hide()
+                            if mainToolbarSettings.mouseInWindow {
+                                NSCursor.hide()
+                            }
                         }
                         hideWorkItem = workItem
                         DispatchQueue.main.asyncAfter(
@@ -70,8 +75,12 @@ struct LogoBounceApp: App {
                             execute: workItem
                         )
                     case .ended:
-                        break
+                        mainToolbarSettings.mouseInWindow = false
+                        NSCursor.unhide()
                     }
+                }
+                .onDisappear {
+                    NSCursor.unhide()
                 }
 
         }
