@@ -31,7 +31,7 @@ struct BouncingLogo: View {
                 ZStack(alignment: .topLeading) {
                     Color.black  // Background
 
-                    Image("jedediah_logo")
+                    Image(toolbarSettings.logoName)
                         .renderingMode(.template)
                         .resizable()
                         .scaledToFit()

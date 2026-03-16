@@ -10,6 +10,8 @@ import SwiftUI
 struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
 
+    let logoNames = ["jedediah_logo", "pbc_logo"]
+
     var body: some View {
         @Bindable var bindableSettings = mainToolbarSettings
 
@@ -40,7 +42,7 @@ struct BottomBar: View {
                 }
                 .background(.ultraThinMaterial)
                 .clipShape(Capsule())
-                
+
                 ZStack {
                     Slider(
                         value: $bindableSettings.desiredLogoHeight,
@@ -63,11 +65,26 @@ struct BottomBar: View {
                 .background(.ultraThinMaterial)
                 .clipShape(Capsule())
 
+                ZStack {
+                    Picker(
+                        "Select Logo Name",
+                        selection: $bindableSettings.logoName
+                    ) {
+                        Text("Jedediah").tag("jedediah_logo")
+                        Text("PBC").tag("pbc_logo")
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .padding()
+                }
+                .background(.ultraThinMaterial)
+                .clipShape(Capsule())
             }
 
         }
 
     }
+
 }
 
 #Preview {

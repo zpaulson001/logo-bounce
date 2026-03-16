@@ -13,13 +13,14 @@ class MainToolbarSettings {
     var animationSpeed: Double = 1
     var desiredLogoHeight: Double = 200
     var isVisible: Bool = true
+    var logoName = "pbc_logo"
 }
 
 @main
 struct LogoBounceApp: App {
     @State private var mainToolbarSettings = MainToolbarSettings()
     @State private var hideWorkItem: DispatchWorkItem?
-
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
