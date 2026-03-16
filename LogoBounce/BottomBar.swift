@@ -40,6 +40,28 @@ struct BottomBar: View {
                 }
                 .background(.ultraThinMaterial)
                 .clipShape(Capsule())
+                
+                ZStack {
+                    Slider(
+                        value: $bindableSettings.desiredLogoHeight,
+                        in: 40...500,
+                        label: {
+                            Text("Speed")
+                        },
+                        minimumValueLabel: {
+                            Image(systemName: "textformat.size.smaller")
+                        },
+                        maximumValueLabel: {
+                            Image(systemName: "textformat.size.larger")
+                        }
+
+                    )
+                    .labelsHidden()
+                    .frame(maxWidth: 200)
+                    .padding()
+                }
+                .background(.ultraThinMaterial)
+                .clipShape(Capsule())
 
             }
 

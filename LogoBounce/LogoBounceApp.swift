@@ -11,6 +11,7 @@ import SwiftUI
 @Observable
 class MainToolbarSettings {
     var animationSpeed: Double = 1
+    var desiredLogoHeight: Double = 200
     var isVisible: Bool = true
 }
 

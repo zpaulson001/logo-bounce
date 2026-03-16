@@ -35,13 +35,19 @@ struct BouncingLogo: View {
                         .renderingMode(.template)
                         .resizable()
                         .scaledToFit()
-                        .frame(height: 200)
+                        .frame(height: toolbarSettings.desiredLogoHeight)
                         .foregroundStyle(logoColor)
                         .offset(x: pos.x, y: pos.y)
                         .background(
                             GeometryReader { geometry in
                                 Color.clear
                                     .onAppear {
+                                        logoHeight = geometry.size.height
+                                        logoWidth = geometry.size.width
+                                    }
+                                    .onGeometryChange(for: CGSize.self) { proxy in
+                                        proxy.size
+                                    } action: {newSize in
                                         logoHeight = geometry.size.height
                                         logoWidth = geometry.size.width
                                     }
