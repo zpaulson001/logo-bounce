@@ -8,14 +8,7 @@
 import Observation
 import SwiftUI
 
-@Observable
-class MainToolbarSettings {
-    var animationSpeed: Double = 2
-    var desiredLogoHeight: Double = 200
-    var isVisible: Bool = true
-    var logoName = "pbc_logo"
-    var mouseInWindow: Bool = false
-}
+
 
 @main
 struct LogoBounceApp: App {
@@ -45,7 +38,7 @@ struct LogoBounceApp: App {
                 .onContinuousHover { phase in
                     switch phase {
                     case .active:
-                        
+
                         mainToolbarSettings.mouseInWindow = true
 
                         if !mainToolbarSettings.isVisible {

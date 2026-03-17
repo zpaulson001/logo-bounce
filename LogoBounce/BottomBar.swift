@@ -7,6 +7,15 @@
 
 import SwiftUI
 
+@Observable
+class MainToolbarSettings {
+    var animationSpeed: Double = 200
+    var desiredLogoHeight: Double = 300
+    var isVisible: Bool = true
+    var selectedLogo = "jedediah_logo"
+    var mouseInWindow: Bool = false
+}
+
 struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
 
@@ -23,8 +32,7 @@ struct BottomBar: View {
                 ZStack {
                     Slider(
                         value: $bindableSettings.animationSpeed,
-                        in: 1...10,
-                        step: 1,
+                        in: 50...2000,
                         label: {
                             Text("Speed")
                         },
@@ -68,7 +76,7 @@ struct BottomBar: View {
                 ZStack {
                     Picker(
                         "Select Logo Name",
-                        selection: $bindableSettings.logoName
+                        selection: $bindableSettings.selectedLogo
                     ) {
                         Text("678").tag("678_logo")
                         Text("Jedediah").tag("jedediah_logo")
