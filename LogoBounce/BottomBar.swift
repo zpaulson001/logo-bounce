@@ -10,7 +10,7 @@ import SwiftUI
 struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
 
-    let logoNames = ["jedediah_logo", "pbc_logo"]
+    let selectedLogos = ["jedediah_logo", "pbc_logo", "678_logo"]
 
     var body: some View {
         @Bindable var bindableSettings = mainToolbarSettings
@@ -70,8 +70,10 @@ struct BottomBar: View {
                         "Select Logo Name",
                         selection: $bindableSettings.logoName
                     ) {
+                        Text("678").tag("678_logo")
                         Text("Jedediah").tag("jedediah_logo")
-                        Text("PBC").tag("pbc_logo")
+                        Text("PBC (Circle)").tag("pbc_logo")
+                        Text("PBC (Full)").tag("pbc_logo_full")
                     }
                     .pickerStyle(.segmented)
                     .labelsHidden()
