@@ -48,8 +48,6 @@ struct BottomBar: View {
                     .frame(maxWidth: 200)
                     .padding()
                 }
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
 
                 ZStack {
                     Slider(
@@ -70,8 +68,6 @@ struct BottomBar: View {
                     .frame(maxWidth: 200)
                     .padding()
                 }
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
 
                 ZStack {
                     Picker(
@@ -87,9 +83,9 @@ struct BottomBar: View {
                     .labelsHidden()
                     .padding()
                 }
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
             }
+            .background(.ultraThinMaterial)
+            .clipShape(Capsule())
 
         }
 
