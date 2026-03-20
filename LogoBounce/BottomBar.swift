@@ -26,75 +26,107 @@ class MainToolbarSettings {
 
 struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
+    @FocusState private var isTimerInputFocused
 
-    let selectedLogos = ["jedediah_logo", "pbc_logo", "678_logo"]
+    let selectedLogos = ["jedediah_logo", "pbc_logo", "678_logo", "ge_logo"]
 
     var body: some View {
         @Bindable var bindableSettings = mainToolbarSettings
 
-        VStack {
-            Color.clear
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            HStack {
-
-                ZStack {
-                    Slider(
-                        value: $bindableSettings.animationSpeed,
-                        in: 50...2000,
-                        label: {
-                            Text("Speed")
-                        },
-                        minimumValueLabel: {
-                            Image(systemName: "tortoise")
-                        },
-                        maximumValueLabel: {
-                            Image(systemName: "hare")
-                        }
-
-                    )
-                    .labelsHidden()
-                    .frame(maxWidth: 200)
-                    .padding()
-                }
-
-                ZStack {
-                    Slider(
-                        value: $bindableSettings.desiredLogoHeight,
-                        in: 40...500,
-                        label: {
-                            Text("Speed")
-                        },
-                        minimumValueLabel: {
-                            Image(systemName: "textformat.size.smaller")
-                        },
-                        maximumValueLabel: {
-                            Image(systemName: "textformat.size.larger")
-                        }
-
-                    )
-                    .labelsHidden()
-                    .frame(maxWidth: 200)
-                    .padding()
-                }
-
-                ZStack {
-                    Picker(
-                        "Select Logo Name",
-                        selection: $bindableSettings.selectedLogo
-                    ) {
-                        Text("678").tag("678_logo")
-                        Text("Jedediah").tag("jedediah_logo")
-                        Text("PBC (Circle)").tag("pbc_logo")
-                        Text("PBC (Full)").tag("pbc_logo_full")
+        Form {
+            Section("Animation Settings") {
+                Slider(
+                    value: $bindableSettings.animationSpeed,
+                    in: 50...2000,
+                    label: {
+                        Text("Speed")
+                    },
+                    minimumValueLabel: {
+                        Image(systemName: "tortoise")
+                    },
+                    maximumValueLabel: {
+                        Image(systemName: "hare")
                     }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    .padding()
+
+                )
+
+                Slider(
+                    value: $bindableSettings.desiredLogoHeight,
+                    in: 40...500,
+                    label: {
+                        Text("Size")
+                    },
+                    minimumValueLabel: {
+                        Image(systemName: "textformat.size.smaller")
+                    },
+                    maximumValueLabel: {
+                        Image(systemName: "textformat.size.larger")
+                    }
+
+                )
+
+                Picker(
+                    "Logo",
+                    selection: $bindableSettings.selectedLogo
+                ) {
+                    Text("DVD").tag("DVD_logo")
+                    Text("678").tag("678_logo")
+                    Text("Jedediah").tag("jedediah_logo")
+                    Text("PBC (Circle)").tag("pbc_logo")
+                    Text("PBC (Full)").tag("pbc_logo_full")
+                    Text("GE").tag("ge_logo")
+                    Text("Gloria Dei").tag("gloria_dei_logo")
                 }
             }
-            .background(.ultraThinMaterial)
-            .clipShape(Capsule())
 
+            Section("Timer") {
+
+                HStack {
+                    TextField("00:00:00", text: $bindableSettings.timerInput)
+                        .labelsHidden()
+                        .focused($isTimerInputFocused)
+                        .disabled(bindableSettings.isTimerRunning)
+                        .onAppear {
+                            isTimerInputFocused = false
+                        }
+                        .onTapGesture {
+                            isTimerInputFocused = true
+                        }
+                        .onChange(of: isTimerInputFocused) { oldValue, newValue in
+                            if newValue == false {
+                                bindableSettings.timerInput = "1000"
+                            }
+                        }
+
+                    Button {
+                        return
+                    } label: {
+                        Image(systemName: "backward.end.fill")
+                    }
+
+                    Button {
+                        bindableSettings.timerToggle()
+                    } label: {
+                        Image(
+                            systemName: bindableSettings.isTimerRunning
+                                ? "pause.fill" : "play.fill"
+                        )
+                    }
+                }
+                .frame(maxWidth: .infinity)
+
+            }
+
+        }
+        .formStyle(.grouped)
+        .frame(maxWidth: 300)
+        .background(.ultraThinMaterial)
+        .onTapGesture {
+            isTimerInputFocused = false
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .onHover { hovering in
+            mainToolbarSettings.mouseInToolbar = hovering
         }
 
     }

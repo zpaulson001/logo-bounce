@@ -11,15 +11,18 @@ struct ContentView: View {
     @Environment(MainToolbarSettings.self) private var toolbarSettings
 
     var body: some View {
-        ZStack {
-            BouncingLogoView()
-            if toolbarSettings.isVisible {
-                BottomBar()
-                    .padding()
-                    .transition(.opacity)
-                    .zIndex(1)
+
+        BouncingLogoView()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(alignment: .trailing) {
+                if toolbarSettings.isVisible {
+                    BottomBar()
+                        .padding()
+                        .transition(.opacity)
+                        .zIndex(1)
+                }
             }
-        }
+
     }
 }
 

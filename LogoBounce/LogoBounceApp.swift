@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 @main
 struct LogoBounceApp: App {
     @State private var mainToolbarSettings = MainToolbarSettings()
