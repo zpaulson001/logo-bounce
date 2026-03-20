@@ -51,6 +51,10 @@ struct LogoBounceApp: App {
                         // 2. Cancel the previous "hide" timer
                         hideWorkItem?.cancel()
 
+                        if mainToolbarSettings.mouseInToolbar {
+                            break
+                        }
+
                         // 3. Start a new 2-second timer
                         let workItem = DispatchWorkItem {
                             withAnimation(.easeInOut(duration: 0.2)) {

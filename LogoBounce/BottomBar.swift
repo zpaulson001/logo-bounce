@@ -14,6 +14,14 @@ class MainToolbarSettings {
     var isVisible: Bool = true
     var selectedLogo = "jedediah_logo"
     var mouseInWindow: Bool = false
+    var mouseInToolbar: Bool = false
+    var isTimerRunning: Bool = false
+    var isTimerInputFocused: Bool = false
+    var timerInput: String = "0"
+
+    func timerToggle() {
+        isTimerRunning = !isTimerRunning
+    }
 }
 
 struct BottomBar: View {
