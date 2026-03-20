@@ -62,20 +62,21 @@ struct BouncingLogoCanvas: View {
                 )
             }
         }
-        .onReceive(
-            NotificationCenter.default.publisher(
-                for: NSWindow.willStartLiveResizeNotification
-            )
-        ) { _ in
-            isResizing = true
-        }
-        .onReceive(
-            NotificationCenter.default.publisher(
-                for: NSWindow.didEndLiveResizeNotification
-            )
-        ) { _ in
-            isResizing = false
-        }.background(.white)
+//        .onReceive(
+//            NotificationCenter.default.publisher(
+//                for: NSWindow.willStartLiveResizeNotification
+//            )
+//        ) { _ in
+//            isResizing = true
+//        }
+//        .onReceive(
+//            NotificationCenter.default.publisher(
+//                for: NSWindow.didEndLiveResizeNotification
+//            )
+//        ) { _ in
+//            isResizing = false
+//        }
+        .background(.black)
         .border(.red, width: 1)
         .ignoresSafeArea()
 
