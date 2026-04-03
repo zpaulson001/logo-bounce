@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct LogoBounceApp: App {
     @State private var mainToolbarSettings = MainToolbarSettings()
+    @State private var timerManager = TimerManager()
     @State private var hideWorkItem: DispatchWorkItem?
 
     var body: some Scene {
@@ -18,6 +19,7 @@ struct LogoBounceApp: App {
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
                 .navigationTitle("")
                 .environment(mainToolbarSettings)
+                .environment(timerManager)
                 .onAppear {
                     let workItem = DispatchWorkItem {
                         withAnimation(.easeInOut(duration: 0.2)) {

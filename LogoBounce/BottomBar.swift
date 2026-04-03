@@ -15,20 +15,44 @@ class MainToolbarSettings {
     var selectedLogo = "jedediah_logo"
     var mouseInWindow: Bool = false
     var mouseInToolbar: Bool = false
-    var isTimerRunning: Bool = false
+    var isTimerEditMode: Bool = true
     var isTimerInputFocused: Bool = false
-    var timerInput: String = "0"
-
-    func timerToggle() {
-        isTimerRunning = !isTimerRunning
-    }
+    var timerInput: String = "00:00"
 }
 
 struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
+    @Environment(TimerManager.self) private var timerManager
+
     @FocusState private var isTimerInputFocused
 
-    let selectedLogos = ["jedediah_logo", "pbc_logo", "678_logo", "ge_logo"]
+    func validateTimerInput() -> TimeInterval {
+
+        let timesArray: [Int] = mainToolbarSettings.timerInput.split(
+            separator: ":"
+        )
+        .map(String.init)
+        .compactMap { substring in
+            // 1. Trim the whitespace from the substring
+            let trimmed = substring.trimmingCharacters(in: .whitespaces)
+
+            // 2. Try to convert to Int.
+            // If it fails (returns nil), compactMap skips it.
+            return Int(trimmed)
+        }
+
+        if timesArray.isEmpty {
+            return 0
+        }
+
+        if timesArray.count == 1 {
+            return TimeInterval(timesArray[0] * 60)
+        }
+
+        var seconds = timesArray[timesArray.count - 1]
+        seconds += timesArray[timesArray.count - 2] * 60
+        return TimeInterval(seconds)
+    }
 
     var body: some View {
         @Bindable var bindableSettings = mainToolbarSettings
@@ -82,38 +106,87 @@ struct BottomBar: View {
             Section("Timer") {
 
                 HStack {
-                    TextField("00:00:00", text: $bindableSettings.timerInput)
+                    if !bindableSettings.isTimerEditMode {
+                        Text(
+                            Duration.seconds(
+                                timerManager.timeRemaining
+                            ).formatted(.time(pattern: .minuteSecond))
+                        )
+                        .fontDesign(.monospaced)
+                        .foregroundColor(
+                            Color(NSColor.disabledControlTextColor)
+                        )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
+                        TextField(
+                            "00:00:00",
+                            text: $bindableSettings.timerInput,
+                        )
                         .labelsHidden()
+                        .fontDesign(.monospaced)
                         .focused($isTimerInputFocused)
-                        .disabled(bindableSettings.isTimerRunning)
+                        .disabled(!bindableSettings.isTimerEditMode)
                         .onAppear {
                             isTimerInputFocused = false
                         }
                         .onTapGesture {
                             isTimerInputFocused = true
                         }
-                        .onChange(of: isTimerInputFocused) { oldValue, newValue in
+                        .onChange(of: isTimerInputFocused) {
+                            oldValue,
+                            newValue in
                             if newValue == false {
-                                bindableSettings.timerInput = "1000"
+                                timerManager.setTimer(
+                                    duration: validateTimerInput()
+                                )
+                                bindableSettings.timerInput = Duration.seconds(
+                                    timerManager.getTimerDuration()
+                                ).formatted(.time(pattern: .minuteSecond))
                             }
                         }
-
-                    Button {
-                        return
-                    } label: {
-                        Image(systemName: "backward.end.fill")
+                        .onSubmit {
+                            timerManager.setTimer(
+                                duration: validateTimerInput()
+                            )
+                            bindableSettings.timerInput = Duration.seconds(
+                                timerManager.getTimerDuration()
+                            ).formatted(.time(pattern: .minuteSecond))
+                            isTimerInputFocused = false
+                        }
                     }
 
                     Button {
-                        bindableSettings.timerToggle()
+                        bindableSettings.isTimerEditMode = true
+                        timerManager.stop()
+                    } label: {
+                        Image(systemName: "square.fill")
+                    }
+                    .disabled(timerManager.timerStatus == .stopped)
+
+                    Button {
+                        bindableSettings.isTimerEditMode = false
+                        switch timerManager.timerStatus {
+                        case .running:
+                            timerManager.pause()
+                        case .paused:
+                            timerManager.resume()
+                        default:
+                            timerManager.start()
+                        }
+
                     } label: {
                         Image(
-                            systemName: bindableSettings.isTimerRunning
+                            systemName: timerManager.timerStatus == .running
                                 ? "pause.fill" : "play.fill"
                         )
                     }
                 }
                 .frame(maxWidth: .infinity)
+                .onChange(of: timerManager.timerStatus) { _, newStatus in
+                    if newStatus == .stopped {
+                        bindableSettings.isTimerEditMode = true
+                    }
+                }
 
             }
 
