@@ -15,7 +15,6 @@ class MainToolbarSettings {
     var selectedLogo = "jedediah_logo"
     var mouseInWindow: Bool = false
     var mouseInToolbar: Bool = false
-    var isTimerEditMode: Bool = true
     var isTimerInputFocused: Bool = false
     var timerInput: String = "00:00"
 }
@@ -106,7 +105,7 @@ struct BottomBar: View {
             Section("Timer") {
 
                 HStack {
-                    if !bindableSettings.isTimerEditMode {
+                    if timerManager.timerStatus == .running {
                         Text(
                             Duration.seconds(
                                 timerManager.timeRemaining
@@ -125,7 +124,6 @@ struct BottomBar: View {
                         .labelsHidden()
                         .fontDesign(.monospaced)
                         .focused($isTimerInputFocused)
-                        .disabled(!bindableSettings.isTimerEditMode)
                         .onAppear {
                             isTimerInputFocused = false
                         }
@@ -156,7 +154,6 @@ struct BottomBar: View {
                     }
 
                     Button {
-                        bindableSettings.isTimerEditMode = true
                         timerManager.stop()
                     } label: {
                         Image(systemName: "square.fill")
@@ -164,13 +161,12 @@ struct BottomBar: View {
                     .disabled(timerManager.timerStatus == .stopped)
 
                     Button {
-                        bindableSettings.isTimerEditMode = false
                         switch timerManager.timerStatus {
                         case .running:
                             timerManager.pause()
                         case .paused:
                             timerManager.resume()
-                        default:
+                        case .stopped:
                             timerManager.start()
                         }
 
@@ -182,11 +178,6 @@ struct BottomBar: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .onChange(of: timerManager.timerStatus) { _, newStatus in
-                    if newStatus == .stopped {
-                        bindableSettings.isTimerEditMode = true
-                    }
-                }
 
             }
 
