@@ -105,7 +105,7 @@ struct BottomBar: View {
             Section("Timer") {
 
                 HStack {
-                    if timerManager.timerStatus == .running {
+                    if timerManager.timerStatus != .stopped {
                         Text(
                             Duration.seconds(
                                 timerManager.timeRemaining
@@ -167,6 +167,12 @@ struct BottomBar: View {
                         case .paused:
                             timerManager.resume()
                         case .stopped:
+                            timerManager.setTimer(
+                                duration: validateTimerInput()
+                            )
+                            bindableSettings.timerInput = Duration.seconds(
+                                timerManager.getTimerDuration()
+                            ).formatted(.time(pattern: .minuteSecond))
                             timerManager.start()
                         }
 
