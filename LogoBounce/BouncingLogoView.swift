@@ -15,6 +15,7 @@ struct BouncingLogoView: View {
 
     var body: some View {
         ZStack {
+
             TimelineView(.animation) { (timeline: TimelineViewDefaultContext) in
                 GeometryReader { container_geo in
                     Image(toolbarSettings.selectedLogo)
@@ -45,8 +46,6 @@ struct BouncingLogoView: View {
                         }
                 }
             }
-            .background(.black)
-            .ignoresSafeArea()
 
             if timerManager.timerStatus != .stopped {
                 Text(
@@ -60,6 +59,8 @@ struct BouncingLogoView: View {
             }
 
         }
+        .background(.black)
+        .ignoresSafeArea()
 
     }
 
