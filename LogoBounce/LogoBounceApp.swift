@@ -76,13 +76,15 @@ struct LogoBounceApp: App {
                     }
                 }
                 .onTapGesture {
-                    hideWorkItem?.cancel()
-                    mainToolbarSettings.isTimerInputFocused = false
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        mainToolbarSettings.isVisible = false
+                    if mainToolbarSettings.isVisible {
+                        hideWorkItem?.cancel()
+                        mainToolbarSettings.isTimerInputFocused = false
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            mainToolbarSettings.isVisible = false
+                        }
+                        updateWindowAppearance(visible: false)
+                        NSCursor.hide()
                     }
-                    updateWindowAppearance(visible: false)
-                    NSCursor.hide()
                 }
                 .onDisappear {
                     NSCursor.unhide()
