@@ -41,7 +41,7 @@ struct BouncingLogoView: View {
                             logoPhysicsStore.update(
                                 to: timeline.date,
                                 within: container_geo.size,
-                                baseSpeed: toolbarSettings.animationSpeed
+                                baseSpeed: toolbarSettings.scaledSpeed
                             )
                         }
                 }

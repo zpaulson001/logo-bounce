@@ -9,7 +9,7 @@ import SwiftUI
 
 @Observable
 class MainToolbarSettings {
-    var animationSpeed: Double = 200
+    var animationSpeed: Double = 0.4
     var desiredLogoHeight: Double = 300
     var isVisible: Bool = true
     var selectedLogo = "jedediah_logo"
@@ -17,6 +17,14 @@ class MainToolbarSettings {
     var mouseInToolbar: Bool = false
     var isTimerInputFocused: Bool = false
     var timerInput: String = "00:00"
+    
+    private var maxScaledSpeed: Double = 5000
+    private var minScaledSpeed: Double = 50
+    
+    var scaledSpeed: Double {
+        let range = maxScaledSpeed - minScaledSpeed
+        return pow(animationSpeed, 4) * range + minScaledSpeed
+    }
 }
 
 struct BottomBar: View {
@@ -60,7 +68,7 @@ struct BottomBar: View {
             Section("Animation Settings") {
                 Slider(
                     value: $bindableSettings.animationSpeed,
-                    in: 50...2000,
+                    in: 0...1,
                     label: {
                         Text("Speed")
                     },
