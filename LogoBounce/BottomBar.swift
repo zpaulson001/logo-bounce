@@ -12,15 +12,18 @@ class MainToolbarSettings {
     var animationSpeed: Double = 0.4
     var desiredLogoHeight: Double = 300
     var isVisible: Bool = true
-    var selectedLogo = "jedediah_logo"
-    var mouseInWindow: Bool = false
-    var mouseInToolbar: Bool = false
-    var isTimerInputFocused: Bool = false
+    var isImporting: Bool = false
+    var colorMode: ColorMode = .overlay
+    var logoType: LogoType = .pbc
+    var selectedPBCLogo: PBCLogo = .jedediah
+    var selectedCustomLogo = ""
     var timerInput: String = "00:00"
-    
+    var isLogoManageMode: Bool = false
+    var selectedImages: Set<String> = []
+
     private var maxScaledSpeed: Double = 5000
     private var minScaledSpeed: Double = 50
-    
+
     var scaledSpeed: Double {
         let range = maxScaledSpeed - minScaledSpeed
         return pow(animationSpeed, 4) * range + minScaledSpeed
@@ -29,6 +32,7 @@ class MainToolbarSettings {
 
 struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
+    @Environment(WindowManagementStore.self) private var windowManagementStore
     @Environment(TimerManager.self) private var timerManager
 
     @FocusState private var isTimerInputFocused
@@ -96,98 +100,19 @@ struct BottomBar: View {
 
                 )
 
-                Picker(
-                    "Logo",
-                    selection: $bindableSettings.selectedLogo
-                ) {
-                    Text("DVD").tag("DVD_logo")
-                    Text("678").tag("678_logo")
-                    Text("Jedediah").tag("jedediah_logo")
-                    Text("PBC (Circle)").tag("pbc_logo")
-                    Text("PBC (Full)").tag("pbc_logo_full")
-                    Text("GE").tag("ge_logo")
-                    Text("Gloria Dei").tag("gloria_dei_logo")
-                }
-            }
+                ColorModeSelector()
 
-            Section("Timer") {
+                LogoTypePicker()
 
-                HStack {
-                    if timerManager.timerStatus != .stopped {
-                        Text(
-                            Duration.seconds(
-                                timerManager.timeRemaining
-                            ).formatted(.time(pattern: .minuteSecond))
-                        )
-                        .fontDesign(.monospaced)
-                        .foregroundColor(
-                            Color(NSColor.disabledControlTextColor)
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                switch bindableSettings.logoType {
+                case .pbc:
+                    PBCLogoPicker()
+                case .custom:
+                    if mainToolbarSettings.isLogoManageMode {
+                        ImageManager()
                     } else {
-                        TextField(
-                            "00:00:00",
-                            text: $bindableSettings.timerInput,
-                        )
-                        .labelsHidden()
-                        .fontDesign(.monospaced)
-                        .focused($isTimerInputFocused)
-                        .onAppear {
-                            isTimerInputFocused = false
-                        }
-                        .onTapGesture {
-                            isTimerInputFocused = true
-                        }
-                        .onChange(of: isTimerInputFocused) {
-                            oldValue,
-                            newValue in
-                            if newValue == false {
-                                timerManager.setTimer(
-                                    duration: validateTimerInput()
-                                )
-                                bindableSettings.timerInput = Duration.seconds(
-                                    timerManager.getTimerDuration()
-                                ).formatted(.time(pattern: .minuteSecond))
-                            }
-                        }
-                        .onSubmit {
-                            timerManager.setTimer(
-                                duration: validateTimerInput()
-                            )
-                            bindableSettings.timerInput = Duration.seconds(
-                                timerManager.getTimerDuration()
-                            ).formatted(.time(pattern: .minuteSecond))
-                            isTimerInputFocused = false
-                        }
-                    }
-
-                    Button {
-                        timerManager.stop()
-                    } label: {
-                        Image(systemName: "square.fill")
-                    }
-                    .disabled(timerManager.timerStatus == .stopped)
-
-                    Button {
-                        switch timerManager.timerStatus {
-                        case .running:
-                            timerManager.pause()
-                        case .paused:
-                            timerManager.resume()
-                        case .stopped:
-                            timerManager.setTimer(
-                                duration: validateTimerInput()
-                            )
-                            bindableSettings.timerInput = Duration.seconds(
-                                timerManager.getTimerDuration()
-                            ).formatted(.time(pattern: .minuteSecond))
-                            timerManager.start()
-                        }
-
-                    } label: {
-                        Image(
-                            systemName: timerManager.timerStatus == .running
-                                ? "pause.fill" : "play.fill"
+                        ImageSelector(
+                            selection: $bindableSettings.selectedCustomLogo
                         )
                     }
                 }

@@ -20,7 +20,7 @@ struct BouncingLogoCanvas: View {
             Canvas { gc, size in
                 var logo = gc.resolve(
                     Image(
-                        toolbarSettings.selectedLogo
+                        toolbarSettings.selectedCustomLogo
                     )
                 )
 
