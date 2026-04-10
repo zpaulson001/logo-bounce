@@ -34,36 +34,8 @@ struct BottomBar: View {
     @Environment(MainToolbarSettings.self) private var mainToolbarSettings
     @Environment(WindowManagementStore.self) private var windowManagementStore
     @Environment(TimerManager.self) private var timerManager
-
-    @FocusState private var isTimerInputFocused
-
-    func validateTimerInput() -> TimeInterval {
-
-        let timesArray: [Int] = mainToolbarSettings.timerInput.split(
-            separator: ":"
-        )
-        .map(String.init)
-        .compactMap { substring in
-            // 1. Trim the whitespace from the substring
-            let trimmed = substring.trimmingCharacters(in: .whitespaces)
-
-            // 2. Try to convert to Int.
-            // If it fails (returns nil), compactMap skips it.
-            return Int(trimmed)
-        }
-
-        if timesArray.isEmpty {
-            return 0
-        }
-
-        if timesArray.count == 1 {
-            return TimeInterval(timesArray[0] * 60)
-        }
-
-        var seconds = timesArray[timesArray.count - 1]
-        seconds += timesArray[timesArray.count - 2] * 60
-        return TimeInterval(seconds)
-    }
+    
+    @FocusState private var isTimerInputFocused: Bool
 
     var body: some View {
         @Bindable var bindableSettings = mainToolbarSettings
@@ -115,21 +87,27 @@ struct BottomBar: View {
                             selection: $bindableSettings.selectedCustomLogo
                         )
                     }
+
                 }
+
+            }
+
+            Section("Timer") {
+                TimerInput(isFocused: $isTimerInputFocused)
                 .frame(maxWidth: .infinity)
 
             }
 
         }
         .formStyle(.grouped)
-        .frame(maxWidth: 300)
-        .background(.ultraThinMaterial)
-        .onTapGesture {
-            isTimerInputFocused = false
-        }
+        .frame(maxWidth: 350)
+        .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .onHover { hovering in
-            mainToolbarSettings.mouseInToolbar = hovering
+            windowManagementStore.mouseInToolbar = hovering
+        }
+        .onTapGesture {
+            isTimerInputFocused = false
         }
 
     }
