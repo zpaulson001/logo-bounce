@@ -11,7 +11,9 @@ import SwiftUI
 struct LogoBounceApp: App {
     @State private var mainToolbarSettings = MainToolbarSettings()
     @State private var timerManager = TimerManager()
-    @State private var hideWorkItem: DispatchWorkItem?
+    @State private var imageStore = ImageStore()
+    @State private var windowManagementStore = WindowManagementStore()
+    @AppStorage("file_names") var fileNames: String = ""
 
     var body: some Scene {
         WindowGroup {
@@ -20,15 +22,19 @@ struct LogoBounceApp: App {
                 .navigationTitle("")
                 .environment(mainToolbarSettings)
                 .environment(timerManager)
+                .environment(imageStore)
+                .environment(windowManagementStore)
                 .onAppear {
                     let workItem = DispatchWorkItem {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             mainToolbarSettings.isVisible = false
                         }
-                        updateWindowAppearance(visible: false)
+                        windowManagementStore.updateWindowAppearance(
+                            visible: false
+                        )
                         NSCursor.hide()
                     }
-                    hideWorkItem = workItem
+                    windowManagementStore.hideWorkItem = workItem
                     DispatchQueue.main.asyncAfter(
                         deadline: .now() + 2.5,
                         execute: workItem
@@ -38,20 +44,24 @@ struct LogoBounceApp: App {
                     switch phase {
                     case .active:
 
-                        mainToolbarSettings.mouseInWindow = true
+                        windowManagementStore.mouseInWindow = true
 
                         if !mainToolbarSettings.isVisible {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 mainToolbarSettings.isVisible = true
                             }
-                            updateWindowAppearance(visible: true)
+                            windowManagementStore.updateWindowAppearance(
+                                visible: true
+                            )
                             NSCursor.unhide()
                         }
 
                         // 2. Cancel the previous "hide" timer
-                        hideWorkItem?.cancel()
+                        windowManagementStore.hideWorkItem?.cancel()
 
-                        if mainToolbarSettings.mouseInToolbar {
+                        if windowManagementStore.mouseInToolbar
+                            || mainToolbarSettings.isImporting
+                        {
                             break
                         }
 
@@ -60,30 +70,21 @@ struct LogoBounceApp: App {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 mainToolbarSettings.isVisible = false
                             }
-                            updateWindowAppearance(visible: false)
-                            if mainToolbarSettings.mouseInWindow {
+                            windowManagementStore.updateWindowAppearance(
+                                visible: false
+                            )
+                            if windowManagementStore.mouseInWindow {
                                 NSCursor.hide()
                             }
                         }
-                        hideWorkItem = workItem
+                        windowManagementStore.hideWorkItem = workItem
                         DispatchQueue.main.asyncAfter(
                             deadline: .now() + 2.5,
                             execute: workItem
                         )
                     case .ended:
-                        mainToolbarSettings.mouseInWindow = false
+                        windowManagementStore.mouseInWindow = false
                         NSCursor.unhide()
-                    }
-                }
-                .onTapGesture {
-                    if mainToolbarSettings.isVisible {
-                        hideWorkItem?.cancel()
-                        mainToolbarSettings.isTimerInputFocused = false
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            mainToolbarSettings.isVisible = false
-                        }
-                        updateWindowAppearance(visible: false)
-                        NSCursor.hide()
                     }
                 }
                 .onDisappear {
@@ -93,21 +94,4 @@ struct LogoBounceApp: App {
         }
     }
 
-    private func updateWindowAppearance(visible: Bool) {
-        // Find the underlying NSWindow
-        guard let window = NSApp.keyWindow ?? NSApp.windows.first else {
-            return
-        }
-
-        // 2. Handle the "Traffic Lights" (Close, Minimize, Zoom)
-        let buttons: [NSWindow.ButtonType] = [
-            .closeButton, .miniaturizeButton, .zoomButton,
-        ]
-        for buttonType in buttons {
-            if let button = window.standardWindowButton(buttonType) {
-                // Using animator() gives it that smooth QuickTime fade
-                button.animator().alphaValue = visible ? 1.0 : 0.0
-            }
-        }
-    }
 }
