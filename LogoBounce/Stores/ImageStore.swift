@@ -65,6 +65,24 @@ class ImageStore {
         )
     }
 
+    private func getUniqueURL(for url: URL) -> URL {
+        var uniqueURL = url
+        let directory = url.deletingLastPathComponent()
+        let extensionPath = url.pathExtension
+        let baseName = url.deletingPathExtension().lastPathComponent
+
+        var counter = 1
+
+        // Continue looping as long as the file exists
+        while fileManager.fileExists(atPath: uniqueURL.path) {
+            let newName = "\(baseName)_\(counter).\(extensionPath)"
+            uniqueURL = directory.appendingPathComponent(newName)
+            counter += 1
+        }
+
+        return uniqueURL
+    }
+
     // 2. The Sync Logic
     func refreshFileList() {
         do {
@@ -77,8 +95,14 @@ class ImageStore {
             )
 
             let sortedURLs = urls.sorted { (url1, url2) -> Bool in
-                let date1 = (try? url1.resourceValues(forKeys: [.addedToDirectoryDateKey]))?.addedToDirectoryDate
-                            let date2 = (try? url2.resourceValues(forKeys: [.addedToDirectoryDateKey]))?.addedToDirectoryDate
+                let date1 =
+                    (try? url1.resourceValues(forKeys: [
+                        .addedToDirectoryDateKey
+                    ]))?.addedToDirectoryDate
+                let date2 =
+                    (try? url2.resourceValues(forKeys: [
+                        .addedToDirectoryDateKey
+                    ]))?.addedToDirectoryDate
 
                 // Sort descending (newest first). Use < for oldest first.
                 return (date1 ?? Date.distantPast) < (date2 ?? Date.distantPast)
@@ -109,9 +133,10 @@ class ImageStore {
 
         // 3. Copy it
         do {
-            try fileManager.copyItem(at: originalURL, to: destinationURL)
+            let uniqueUrl = getUniqueURL(for: destinationURL)
+            try fileManager.copyItem(at: originalURL, to: uniqueUrl)
             refreshFileList()
-            print(destinationURL)
+            print(uniqueUrl)
         } catch {
             print("Copy failed: \(error)")
             return
