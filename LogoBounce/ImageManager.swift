@@ -128,7 +128,7 @@ struct ImageManagerPreview: View {
             .padding(8)
             .background {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.accentColor, lineWidth: 3)
+                    .strokeBorder(Color.accentColor, lineWidth: 3)
 
             }
             .contentShape(RoundedRectangle(cornerRadius: 8))
